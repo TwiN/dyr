@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/TwinProduction/dyr/cmd/create"
 	"github.com/TwinProduction/dyr/config"
 	"github.com/spf13/cobra"
 	"os"
@@ -27,6 +28,8 @@ func Execute() {
 	if err != nil {
 		panic(err)
 	}
+
+	rootCmd.AddCommand(create.NewCreateCmd())
 
 	if err := rootCmd.Execute(); err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, err.Error())

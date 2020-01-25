@@ -12,7 +12,7 @@ const (
 )
 
 type Configuration struct {
-	// Banner to include before
+	// Banner to include before printing a note
 	Banner string `yaml:"banner"`
 }
 
@@ -59,7 +59,9 @@ func LoadConfiguration() error {
 }
 
 func buildDefaultConfiguration() *Configuration {
-	return &Configuration{}
+	return &Configuration{
+		Banner: "",
+	}
 }
 
 func createDirIfNotExists(path string) error {
