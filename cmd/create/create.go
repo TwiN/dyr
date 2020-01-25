@@ -3,6 +3,7 @@ package create
 import (
 	"fmt"
 	"github.com/TwinProduction/dyr/core"
+	"github.com/TwinProduction/dyr/storage"
 	"github.com/spf13/cobra"
 	"strings"
 )
@@ -38,4 +39,8 @@ func NewCreateCmd() *cobra.Command {
 
 func SaveNote(note *core.Note) {
 	fmt.Printf("%v\n", note)
+	err := storage.SaveNote(note)
+	if err != nil {
+		panic(err)
+	}
 }

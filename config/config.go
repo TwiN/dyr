@@ -16,21 +16,15 @@ type Configuration struct {
 	Banner string `yaml:"banner"`
 }
 
-func LoadConfiguration() error {
-	// Find home directory
-	home, err := homedir.Dir()
-	if err != nil {
-		return err
-	}
-
+func LoadConfiguration() (err error) {
 	// Configure Viper
 	viper.New()
-	viper.AddConfigPath(fmt.Sprintf("%s/%s", home, ConfigurationDirPathRelativeToUserHome))
+	viper.AddConfigPath(GetConfigDir())
 	viper.SetConfigName("dyr")
 	viper.SetConfigType("yaml")
 
 	// Read the existing configuration
-	if err := viper.ReadInConfig(); err != nil {
+	if err = viper.ReadInConfig(); err != nil {
 		fmt.Println("Config file missing or corrupted: ", err)
 		fmt.Println("Recreating configuration file")
 
@@ -39,16 +33,16 @@ func LoadConfiguration() error {
 		viper.SetDefault("banner", config.Banner)
 
 		// Check if ~/.config exists and creates it if it doesn't
-		err = createDirIfNotExists(fmt.Sprintf("%s/%s", home, ConfigurationDirPathRelativeToUserHome))
+		err = createDirIfNotExists(GetConfigDir())
 		if err != nil {
 			return err
 		}
 
 		// Save current configuration to file only if the file does not exist
 		viper.SafeWriteConfig()
-		if err := viper.SafeWriteConfigAs(fmt.Sprintf("%s/%s/dyr.yaml", home, ConfigurationDirPathRelativeToUserHome)); err != nil {
+		if err := viper.SafeWriteConfigAs(fmt.Sprintf("%s/dyr.yaml", GetConfigDir())); err != nil {
 			if os.IsNotExist(err) {
-				err = viper.WriteConfigAs(fmt.Sprintf("%s/%s/dyr.yaml", home, ConfigurationDirPathRelativeToUserHome))
+				err = viper.WriteConfigAs(fmt.Sprintf("%s/dyr.yaml", GetConfigDir()))
 			}
 		}
 	}
@@ -75,4 +69,12 @@ func createDirIfNotExists(path string) error {
 		}
 	}
 	return err
+}
+
+func GetConfigDir() string {
+	home, err := homedir.Dir()
+	if err != nil {
+		panic(err)
+	}
+	return fmt.Sprintf("%s/%s", home, ConfigurationDirPathRelativeToUserHome)
 }
