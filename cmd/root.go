@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/TwinProduction/dyr/cmd/create"
+	"github.com/TwinProduction/dyr/cmd/get"
 	"github.com/TwinProduction/dyr/config"
 	"github.com/spf13/cobra"
 	"os"
@@ -24,12 +25,13 @@ func NewRootCmd() *cobra.Command {
 func Execute() {
 	rootCmd := NewRootCmd()
 
-	err := config.LoadConfiguration()
+	err := config.Load()
 	if err != nil {
 		panic(err)
 	}
 
 	rootCmd.AddCommand(create.NewCreateCmd())
+	rootCmd.AddCommand(get.NewGetCmd())
 
 	if err := rootCmd.Execute(); err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, err.Error())
