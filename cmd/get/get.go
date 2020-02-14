@@ -3,6 +3,7 @@ package get
 import (
 	"fmt"
 	"github.com/TwinProduction/dyr/config"
+	"github.com/TwinProduction/dyr/core"
 	"github.com/TwinProduction/dyr/storage"
 	"github.com/spf13/cobra"
 	"strconv"
@@ -15,23 +16,34 @@ type Options struct {
 
 func NewGetCmd() *cobra.Command {
 	options := Options{
-		Banner: true,
+		Banner:   true,
+		TextOnly: true,
 	}
 
 	var cmd = &cobra.Command{
-		Use:     "get NOTE_ID",
+		Use:     "get [NOTE_ID]",
 		Short:   "Get an entry by id",
 		Long:    "Get an entry by id",
 		Example: "dyr get 1",
-		Args:    cobra.ExactArgs(1),
+		Args:    cobra.RangeArgs(0, 1),
 		Run: func(cmd *cobra.Command, args []string) {
-			id, err := strconv.Atoi(args[0])
-			if err != nil {
-				panic(err)
-			}
-			note, err := storage.GetNoteById(uint64(id))
-			if err != nil {
-				panic(err)
+			var notes []*core.Note
+			if len(args) == 0 {
+				var err error
+				notes, err = storage.GetAllNotes()
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				id, err := strconv.Atoi(args[0])
+				if err != nil {
+					panic(err)
+				}
+				note, err := storage.GetNoteById(uint64(id))
+				if err != nil {
+					panic(err)
+				}
+				notes = append(notes, note)
 			}
 			if options.Banner {
 				banner := config.Get().Banner
@@ -39,10 +51,17 @@ func NewGetCmd() *cobra.Command {
 					fmt.Println(config.Get().Banner)
 				}
 			}
-			if options.TextOnly {
-				fmt.Println(note.Text)
-			} else {
-				fmt.Printf("ID: %d\nTAGS: %s\nTEXT: %s\n", note.Id, note.Tags, note.Text)
+			isPrintingAll := len(args) == 0
+			for _, note := range notes {
+				if options.TextOnly {
+					if isPrintingAll {
+						fmt.Printf("%d: %s\n", note.Id, note.Text)
+					} else {
+						fmt.Println(note.Text)
+					}
+				} else {
+					fmt.Printf("ID: %d\nTAGS: %s\nTEXT: %s\n", note.Id, note.Tags, note.Text)
+				}
 			}
 		},
 	}
