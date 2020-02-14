@@ -20,3 +20,10 @@ func SaveNote(note *core.Note) error {
 	defer store.Close()
 	return store.Put(fmt.Sprintf("%d", note.Id), note.ToBytes())
 }
+
+func GetNoteById(id uint64) (*core.Note, error) {
+	store := openStore()
+	defer store.Close()
+	bytes, _ := store.Get(fmt.Sprintf("%d", id))
+	return core.NoteFromBytes(bytes)
+}
