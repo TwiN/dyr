@@ -1,19 +1,13 @@
 package create
 
 import (
-	"fmt"
-	"github.com/TwinProduction/dyr/core"
 	"github.com/TwinProduction/dyr/storage"
 	"github.com/spf13/cobra"
 	"strings"
 )
 
 func NewCreateCmd() *cobra.Command {
-	note := &core.Note{
-		Id:   0,
-		Text: "",
-		Tags: []string{},
-	}
+	var tags []string
 
 	var cmd = &cobra.Command{
 		Use:     "create NOTE_TO_ADD",
@@ -26,20 +20,18 @@ func NewCreateCmd() *cobra.Command {
 				_ = cmd.Help()
 				return
 			} else {
-				note.Text = strings.Join(args, " ")
+				SaveNote(strings.Join(args, " "), tags)
 			}
-			SaveNote(note)
 		},
 	}
 
-	cmd.Flags().StringSliceVarP(&note.Tags, "tags", "t", note.Tags, "Comma-separated list of tags")
+	cmd.Flags().StringSliceVarP(&tags, "tags", "t", tags, "Comma-separated list of tags")
 
 	return cmd
 }
 
-func SaveNote(note *core.Note) {
-	fmt.Printf("%v\n", note)
-	err := storage.SaveNote(note)
+func SaveNote(text string, tags []string) {
+	err := storage.SaveNote(text, tags)
 	if err != nil {
 		panic(err)
 	}
