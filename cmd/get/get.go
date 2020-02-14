@@ -51,10 +51,10 @@ func NewGetCmd() *cobra.Command {
 					fmt.Println(config.Get().Banner)
 				}
 			}
-			isPrintingAll := len(args) == 0
+			isPrintingAllNotes := len(args) == 0
 			for _, note := range notes {
 				if options.TextOnly {
-					if isPrintingAll {
+					if isPrintingAllNotes {
 						fmt.Printf("%d: %s\n", note.Id, note.Text)
 					} else {
 						fmt.Println(note.Text)
