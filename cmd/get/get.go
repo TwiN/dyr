@@ -7,6 +7,7 @@ import (
 	"github.com/TwinProduction/dyr/storage"
 	"github.com/spf13/cobra"
 	"strconv"
+	"strings"
 )
 
 type Options struct {
@@ -60,7 +61,7 @@ func NewGetCmd() *cobra.Command {
 						fmt.Println(note.Text)
 					}
 				} else {
-					fmt.Printf("ID: %d\nTAGS: %s\nTEXT: %s\n", note.Id, note.Tags, note.Text)
+					fmt.Printf("[%d]\nTAGS: %s\nTEXT: %s\n", note.Id, strings.Join(note.Tags, ","), note.Text)
 				}
 			}
 		},
