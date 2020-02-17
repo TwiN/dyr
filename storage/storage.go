@@ -61,3 +61,9 @@ func GetAllNotes() ([]*core.Note, error) {
 	}
 	return notes, nil
 }
+
+func DeleteNoteById(id uint64) error {
+	store := openStore()
+	defer store.Close()
+	return store.Delete(fmt.Sprintf("%d", id))
+}
