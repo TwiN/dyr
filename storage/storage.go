@@ -77,9 +77,18 @@ func GetRandomNote() (*core.Note, error) {
 			validNoteIds = append(validNoteIds, key)
 		}
 	}
-	rand.Seed(time.Now().UnixNano())
-	randomKey := validNoteIds[rand.Intn(len(validNoteIds))]
-	id, err := strconv.Atoi(randomKey)
+	if validNoteIds == nil || len(validNoteIds) == 0 {
+		return nil, fmt.Errorf("no valid notes available")
+	}
+	var err error
+	var id int
+	if len(validNoteIds) == 1 {
+		id, err = strconv.Atoi(validNoteIds[0])
+	} else {
+		rand.Seed(time.Now().UnixNano())
+		randomKey := validNoteIds[rand.Intn(len(validNoteIds))]
+		id, err = strconv.Atoi(randomKey)
+	}
 	if err != nil {
 		return nil, err
 	}
