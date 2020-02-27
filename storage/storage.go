@@ -2,14 +2,19 @@ package storage
 
 import (
 	"fmt"
+	"math/rand"
+	"sort"
+	"strconv"
+	"time"
+
 	"github.com/TwinProduction/dyr/config"
 	"github.com/TwinProduction/dyr/core"
 	"github.com/TwinProduction/gdstore"
-	"sort"
 )
 
 const (
 	DatabaseFileName = "dyr.data"
+	CurrentNoteIdKey = "current_note_id"
 )
 
 func openStore() *gdstore.GDStore {
@@ -24,16 +29,16 @@ func SaveNote(text string, tags []string) error {
 		Text: text,
 		Tags: tags,
 	}
-	lastId, ok, err := store.GetInt("current_note_id")
+	lastId, ok, err := store.GetInt(CurrentNoteIdKey)
 	if err != nil {
 		return err
 	}
 	if !ok {
 		note.Id = 0
-		_ = store.Put("current_note_id", []byte("0"))
+		_ = store.Put(CurrentNoteIdKey, []byte("0"))
 	} else {
 		note.Id = uint64(lastId) + 1
-		_ = store.Put("current_note_id", []byte(fmt.Sprintf("%d", note.Id)))
+		_ = store.Put(CurrentNoteIdKey, []byte(fmt.Sprintf("%d", note.Id)))
 	}
 	return store.Put(fmt.Sprintf("%d", note.Id), note.ToBytes())
 }
@@ -60,6 +65,25 @@ func GetAllNotes() ([]*core.Note, error) {
 		notes = append(notes, note)
 	}
 	return notes, nil
+}
+
+func GetRandomNote() (*core.Note, error) {
+	store := openStore()
+	keys := store.Keys()
+	store.Close()
+	var validNoteIds []string
+	for _, key := range keys {
+		if key != CurrentNoteIdKey {
+			validNoteIds = append(validNoteIds, key)
+		}
+	}
+	rand.Seed(time.Now().UnixNano())
+	randomKey := validNoteIds[rand.Intn(len(validNoteIds))]
+	id, err := strconv.Atoi(randomKey)
+	if err != nil {
+		return nil, err
+	}
+	return GetNoteById(uint64(id))
 }
 
 func DeleteNoteById(id uint64) error {
