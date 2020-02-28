@@ -37,7 +37,7 @@ func Execute() {
 	rootCmd.AddCommand(remove.NewRemoveCmd())
 
 	if err := rootCmd.Execute(); err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, err.Error())
+		_, _ = fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 }
