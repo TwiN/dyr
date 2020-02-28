@@ -15,7 +15,7 @@ func NewRootCmd() *cobra.Command {
 	var rootCmd = &cobra.Command{
 		Use:     "dyr",
 		Short:   "dyr",
-		Long:    "dyr",
+		Long:    "dyr - Do you remember?",
 		Version: "v0.0.1",
 		Run: func(cmd *cobra.Command, args []string) {
 			_ = cmd.Help()
