@@ -2,14 +2,13 @@ package storage
 
 import (
 	"fmt"
+	"github.com/TwinProduction/dyr/config"
+	"github.com/TwinProduction/dyr/core"
+	"github.com/TwinProduction/gdstore"
 	"math/rand"
 	"sort"
 	"strconv"
 	"time"
-
-	"github.com/TwinProduction/dyr/config"
-	"github.com/TwinProduction/dyr/core"
-	"github.com/TwinProduction/gdstore"
 )
 
 const (

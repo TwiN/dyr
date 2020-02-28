@@ -2,13 +2,12 @@ package get
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
-
 	"github.com/TwinProduction/dyr/config"
 	"github.com/TwinProduction/dyr/core"
 	"github.com/TwinProduction/dyr/storage"
 	"github.com/spf13/cobra"
+	"strconv"
+	"strings"
 )
 
 type Options struct {

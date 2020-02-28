@@ -2,10 +2,9 @@ package remove
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/TwinProduction/dyr/storage"
 	"github.com/spf13/cobra"
+	"strconv"
 )
 
 func NewRemoveCmd() *cobra.Command {
