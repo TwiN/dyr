@@ -11,16 +11,16 @@ import (
 )
 
 type Options struct {
-	TextOnly bool
-	Banner   bool
-	Random   bool
+	Verbose bool
+	Banner  bool
+	Random  bool
 }
 
 func NewGetCmd() *cobra.Command {
 	options := Options{
-		Banner:   true,
-		TextOnly: true,
-		Random:   false,
+		Banner:  true,
+		Verbose: false,
+		Random:  false,
 	}
 
 	var cmd = &cobra.Command{
@@ -64,21 +64,21 @@ func NewGetCmd() *cobra.Command {
 			}
 			isPrintingAllNotes := len(args) == 0 && !options.Random
 			for _, note := range notes {
-				if options.TextOnly {
+				if options.Verbose {
+					fmt.Printf("[%d]\nTAGS: %s\nTEXT: %s\n", note.Id, strings.Join(note.Tags, ","), note.Text)
+				} else {
 					// Print the ID only if we print more than one note
 					if isPrintingAllNotes {
 						fmt.Printf("%d: %s\n", note.Id, note.Text)
 					} else {
 						fmt.Println(note.Text)
 					}
-				} else {
-					fmt.Printf("[%d]\nTAGS: %s\nTEXT: %s\n", note.Id, strings.Join(note.Tags, ","), note.Text)
 				}
 			}
 		},
 	}
 
-	cmd.Flags().BoolVarP(&options.TextOnly, "text-only", "t", options.TextOnly, "Whether to print only the text")
+	cmd.Flags().BoolVarP(&options.Verbose, "verbose", "v", options.Verbose, "Whether to print only the text")
 	cmd.Flags().BoolVarP(&options.Random, "random", "r", options.Random, "Whether to print a random note. Ignored if an id is specified")
 	cmd.Flags().BoolVarP(&options.Banner, "banner", "b", options.Banner, "Whether to show the banner configured with... TODO: make a command for creating a banner")
 
