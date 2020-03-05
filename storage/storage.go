@@ -56,12 +56,35 @@ func GetAllNotes() ([]*core.Note, error) {
 	keys := store.Keys()
 	sort.Strings(keys)
 	for _, key := range keys {
+		if key == CurrentNoteIdKey {
+			continue
+		}
 		bytes, _ := store.Get(key)
 		note, err := core.NoteFromBytes(bytes)
 		if err != nil {
 			continue
 		}
 		notes = append(notes, note)
+	}
+	return notes, nil
+}
+
+func GetNotesByTag(tag string) ([]*core.Note, error) {
+	var notes []*core.Note
+	store := openStore()
+	defer store.Close()
+	values := store.Values()
+	for _, value := range values {
+		note, err := core.NoteFromBytes(value)
+		if err != nil {
+			continue
+		}
+		for _, t := range note.Tags {
+			if tag == t {
+				notes = append(notes, note)
+				break
+			}
+		}
 	}
 	return notes, nil
 }

@@ -13,6 +13,7 @@ type GDStore struct {
 	mux      sync.Mutex
 }
 
+// New creates a new GDStore
 func New(filePath string) *GDStore {
 	store := &GDStore{
 		FilePath: filePath,
@@ -97,6 +98,19 @@ func (store *GDStore) Keys() []string {
 		i++
 	}
 	return keys
+}
+
+// Values returns a list of all values
+func (store *GDStore) Values() [][]byte {
+	store.mux.Lock()
+	defer store.mux.Unlock()
+	values := make([][]byte, len(store.data))
+	i := 0
+	for _, v := range store.data {
+		values[i] = v
+		i++
+	}
+	return values
 }
 
 // Close closes the store's file if it isn't already closed.
