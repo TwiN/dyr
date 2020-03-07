@@ -14,6 +14,7 @@ type Options struct {
 	Verbose bool
 	Banner  bool
 	Random  bool
+	Tag     string
 }
 
 func NewGetCmd() *cobra.Command {
@@ -24,22 +25,37 @@ func NewGetCmd() *cobra.Command {
 	}
 
 	var cmd = &cobra.Command{
-		Use:     "get [NOTE_ID]",
-		Short:   "Get an entry by id",
-		Long:    "Get an entry by id",
-		Example: "dyr get 1 # Print one note\ndyr get # Print all notes\ndyr get --random # Print one random note",
-		Args:    cobra.RangeArgs(0, 1),
+		Use:   "get [NOTE_ID]",
+		Short: "Get an entry by id",
+		Long:  "Get an entry by id",
+		Example: `  # List all notes
+  dyr get
+
+  # List a single note with the specified id
+  dyr get 1
+
+  # List a single random note
+  dyr get --random
+
+  # List all notes tagged with "test"
+  dyr get --tag test`,
+		Args: cobra.RangeArgs(0, 1),
 		Run: func(cmd *cobra.Command, args []string) {
 			var notes []*core.Note
 			if len(args) == 0 {
-				if options.Random {
+				var err error
+				if options.Tag != "" {
+					notes, err = storage.GetNotesByTag(options.Tag)
+					if err != nil {
+						panic(err)
+					}
+				} else if options.Random {
 					note, err := storage.GetRandomNote()
 					if err != nil {
 						panic(err)
 					}
 					notes = append(notes, note)
 				} else {
-					var err error
 					notes, err = storage.GetAllNotes()
 					if err != nil {
 						panic(err)
@@ -81,6 +97,8 @@ func NewGetCmd() *cobra.Command {
 	cmd.Flags().BoolVarP(&options.Verbose, "verbose", "v", options.Verbose, "Whether to print only the text")
 	cmd.Flags().BoolVarP(&options.Random, "random", "r", options.Random, "Whether to print a random note. Ignored if an id is specified")
 	cmd.Flags().BoolVarP(&options.Banner, "banner", "b", options.Banner, "Whether to show the banner configured with... TODO: make a command for creating a banner")
+	cmd.Flags().StringVarP(&options.Tag, "tag", "t", options.Tag, "List all nodes with the provided tag. Ignored if an id is specified")
+	// TODO: Allow --tag and --random to be used together
 
 	return cmd
 }
