@@ -1,6 +1,6 @@
 module github.com/TwinProduction/dyr
 
-go 1.13
+go 1.14
 
 require (
 	github.com/TwinProduction/gdstore v0.1.3

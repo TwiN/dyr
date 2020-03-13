@@ -3,18 +3,15 @@ package config
 import (
 	"errors"
 	"fmt"
+	"os"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
-	"os"
 )
 
-const (
-	ConfigurationDirPathRelativeToUserHome = ".config/dyr"
-)
+const ConfigurationDirPathRelativeToUserHome = ".config/dyr"
 
-var (
-	config *Configuration
-)
+var config *Configuration
 
 type Configuration struct {
 	// Banner to include before printing a note
