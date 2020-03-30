@@ -78,10 +78,9 @@ dyr remove NOTE_ID
 ```
 
 
-## Useful reminders
+## Examples
 
-Here's a list of tips I kept forgetting, which is what prompted 
-the creation of this project:
+Here's an example of a few notes I registered:
 - You can quickly move the current line down with vim using "ddp"
 - You can open a terminal in vim using ":term"
-
+- Fix your posture
