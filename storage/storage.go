@@ -54,7 +54,17 @@ func GetAllNotes() ([]*core.Note, error) {
 	store := openStore()
 	defer store.Close()
 	keys := store.Keys()
-	sort.Strings(keys)
+	sort.Slice(keys, func(i, j int) bool {
+		first, err := strconv.ParseInt(keys[i], 10, 0)
+		if err != nil {
+			return false
+		}
+		second, err := strconv.ParseInt(keys[j], 10, 0)
+		if err != nil {
+			return false
+		}
+		return second > first
+	})
 	for _, key := range keys {
 		if key == CurrentNoteIdKey {
 			continue
