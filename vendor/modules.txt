@@ -1,4 +1,4 @@
-# github.com/TwinProduction/gdstore v0.1.3
+# github.com/TwinProduction/gdstore v0.1.6
 ## explicit
 github.com/TwinProduction/gdstore
 # github.com/fsnotify/fsnotify v1.4.7
