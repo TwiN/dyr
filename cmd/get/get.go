@@ -73,8 +73,7 @@ func NewGetCmd() *cobra.Command {
 				notes = append(notes, note)
 			}
 			if options.Banner {
-				banner := config.Get().Banner
-				if len(banner) > 0 {
+				if banner := config.Get().Banner; len(banner) > 0 {
 					fmt.Println(config.Get().Banner)
 				}
 			}
